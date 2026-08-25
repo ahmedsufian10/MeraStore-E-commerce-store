@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (!localStorage.getItem('mera-store-token')) { setLoading(false); return; }
-    api.get('/auth/me').then(({ data }) => setUser(data.user)).catch(() => { localStorage.removeItem('mera-store-token'); localStorage.removeItem('mera-store-user'); setUser(null); }).finally(() => setLoading(false));
+    api.get('/auth/me').then(({ data }) => { if (!data?.user || typeof data.user !== 'object') throw new Error('The session response was invalid.'); setUser(data.user); }).catch(() => { localStorage.removeItem('mera-store-token'); localStorage.removeItem('mera-store-user'); setUser(null); }).finally(() => setLoading(false));
   }, []);
 
   const saveSession = (data) => { localStorage.setItem('mera-store-token', data.token); localStorage.setItem('mera-store-user', JSON.stringify(data.user)); setUser(data.user); };

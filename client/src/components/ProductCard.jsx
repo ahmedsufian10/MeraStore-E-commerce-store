@@ -5,7 +5,7 @@ import StarRating from './StarRating';
 
 export default function ProductCard({ product }) {
   const { addToCart } = useCart();
-  const salePrice = product.discountPrice ?? product.price;
+  const salePrice = Number(product.discountPrice ?? product.price ?? 0);
   const hasCompare = product.discountPrice !== undefined && product.discountPrice !== null;
   return <article className="product-card">
     <div className="product-image-wrap">
@@ -13,6 +13,6 @@ export default function ProductCard({ product }) {
       {product.isFeatured && <span className="product-badge">Featured</span>}
       <button className="wishlist-button" aria-label={`Save ${product.name}`}><Icon name="heart" size={15} /></button>
     </div>
-    <div className="product-meta"><span className="product-category">{product.category?.name || 'Mera Store'}</span><h3 className="product-name"><Link to={`/products/${product._id}`}>{product.name}</Link></h3><div className="product-bottom"><span className="price">${salePrice.toLocaleString()} {hasCompare && <span className="compare-price">${product.price.toLocaleString()}</span>}</span><StarRating rating={product.ratings || 0} count={product.numReviews || 0} /></div><div className="card-action"><button className="button button-secondary button-small button-block" disabled={!product.stock} onClick={() => addToCart(product)}>{product.stock ? 'Add to bag' : 'Out of stock'}</button></div></div>
+    <div className="product-meta"><span className="product-category">{product.category?.name || 'Mera Store'}</span><h3 className="product-name"><Link to={`/products/${product._id}`}>{product.name}</Link></h3><div className="product-bottom"><span className="price">${salePrice.toLocaleString()} {hasCompare && <span className="compare-price">${Number(product.price || 0).toLocaleString()}</span>}</span><StarRating rating={product.ratings || 0} count={product.numReviews || 0} /></div><div className="card-action"><button className="button button-secondary button-small button-block" disabled={!product.stock} onClick={() => addToCart(product)}>{product.stock ? 'Add to bag' : 'Out of stock'}</button></div></div>
   </article>;
 }
